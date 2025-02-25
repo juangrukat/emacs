@@ -1,0 +1,5 @@
+Bad Words:
+
+This is meant to help you highlight words in the text editor which you have placed in a text file.
+The format of the text file should be a single column with either words or phrases in a new line. All words or phrases will be highlighted in the text editor in Emacs so that you may alter them.
+

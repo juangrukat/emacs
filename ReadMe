@@ -9,3 +9,4 @@ C-x C-f ~/.emacs.d/init.el
 To run:
 M-x highlight-badwords-from-file
 Then, enter ~/badwords.txt when prompted
+

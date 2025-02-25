@@ -1,0 +1,31 @@
+(defun highlight-badwords-from-file (filename)
+  "Highlight words from a file in the current buffer, ignoring case."
+  (interactive "fBad words file: ")
+  (let ((case-fold-search t)
+        (words-to-highlight '())
+        (count 0)
+        (total-words 0))
+    (when (file-exists-p filename)
+      ;; First, collect all words/phrases
+      (with-temp-buffer
+        (insert-file-contents filename)
+        (setq total-words (count-lines (point-min) (point-max)))
+        (goto-char (point-min))
+        (while (not (eobp))
+          (let ((phrase (string-trim (thing-at-point 'line t))))
+            (when (> (length phrase) 0)
+              (push (downcase phrase) words-to-highlight)))
+          (forward-line 1)))
+      ;; Then highlight them in the current buffer
+      (message "Starting to highlight %d words..." total-words)
+      (dolist (phrase words-to-highlight)
+        (setq count (1+ count))
+        (when (zerop (mod count 100))
+          (message "Processed %d/%d words..." count total-words))
+        (save-excursion
+          (goto-char (point-min))
+          (condition-case nil
+              (let ((case-fold-search t))
+                (highlight-regexp (regexp-quote phrase) 'font-lock-warning-face))
+            (error (message "Failed to highlight: %s" phrase)))))
+      (message "Finished highlighting %d words" count))))
